@@ -131,7 +131,7 @@ resource "aws_security_group" "database-security-group" {
 resource "aws_db_instance" "database-instance" {
   identifier             = "aws-goat-db"
   allocated_storage      = 10
-  instance_class         = "db.t2.micro"
+  instance_class         = "db.t3.micro" # Changed to t3.micro as t2.micro is not availbale anymore
   engine                 = "mysql"
   engine_version         = "5.7"
   username               = "root"
@@ -353,7 +353,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   iam_instance_profile = aws_iam_instance_profile.ecs-instance-profile.name
   security_groups      = [aws_security_group.ecs_sg.id]
   user_data            = data.template_file.user_data.rendered
-  instance_type        = "t2.medium" # changed from t2.micro to t2.medium in order to accomodate the lacework agent.
+  instance_type        = "t3.medium" # changed from t2.micro to t3.medium in order to accomodate the lacework agent.
 }
 resource "aws_autoscaling_group" "ecs_asg" {
   name                 = "ECS-lab-asg"
