@@ -353,7 +353,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   iam_instance_profile = aws_iam_instance_profile.ecs-instance-profile.name
   security_groups      = [aws_security_group.ecs_sg.id]
   user_data            = data.template_file.user_data.rendered
-  instance_type        = "t2.micro"
+  instance_type        = "t2.medium" # changed from t2.micro to t2.medium in order to accomodate the lacework agent.
 }
 resource "aws_autoscaling_group" "ecs_asg" {
   name                 = "ECS-lab-asg"
@@ -371,6 +371,7 @@ resource "aws_ecs_cluster" "cluster" {
     name = "ecs-cluster-name"
   }
 }
+
 
 data "template_file" "user_data" {
   template = file("${path.module}/resources/ecs/user_data.tpl")
@@ -514,4 +515,8 @@ resource "aws_s3_bucket" "bucket_tf_files" {
 
 output "ad_Target_URL" {
   value = "${aws_alb.application_load_balancer.dns_name}:80/login.php"
+}
+
+output "ecs_cluster_arn" {
+    value = aws_ecs_cluster.cluster.arn
 }
